@@ -1,0 +1,57 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><title>用 ESLint 和 Prettier 写出高质量代码</title><link rel="alternate" type="application/rss+xml" title="庶民样本" href="/atom.xml"><link href="/css/main.css?v=4.7.2" rel="stylesheet"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@1.205.0/distr/fira_code.min.css"><link rel="stylesheet" href="/css/highlight.css?v=4.7.2"><link rel="stylesheet" href="/css/zoom.css?v=4.7.2"><meta name="twitter:card" content="summary"><meta name="twitter:site" content="@rem_rin_rin"><meta name="twitter:title" content="用 ESLint 和 Prettier 写出高质量代码"><meta name="description" content="当然你的代码本身不能是无意义的"><meta name="twitter:description" content="当然你的代码本身不能是无意义的"></head><body><header class="header"><h1 class="site-name"><a href="/">e.z.</a></h1><ul class="nav"><li><a href="/about.html">about</a></li><li><a href="/girls.html">girls</a></li><li><a href="/donate.html">donate</a></li></ul></header><section class="centered post-page"><article class="post"><h2 class="post-title">用 ESLint 和 Prettier 写出高质量代码</h2><h2 class="post-subtitle">当然你的代码本身不能是无意义的</h2><div class="post-content markdown-body"><p><a href="https://github.com/eslint/eslint" target="_blank" rel="external">ESLint</a> 可以检测出你代码中潜在的问题，比如使用了某个变量却忘记了定义，而 <a href="https://github.com/prettier/prettier" target="_blank" rel="external">Prettier</a> 作为代码格式化工具，能够统一你或者你的团队的代码风格。</p>
+<p>本文不会介绍这两种工具单独的使用方法，因为相关网络资料已经足够多了。这里我介绍一下怎么同时使用它们。</p>
+<h2 id="zai-eslint-zhong-shi-yong-eslintpluginprettier">在 ESLint 中使用 eslint-plugin-prettier</h2>
+<p><strong>为什么使用这种方法: 希望格式化结果完全符合 Prettier 的要求。</strong></p>
+<p><code>eslint-plugin-prettier</code> 的工作原理是，对比格式化前和用 Prettier 格式化后的代码，有不一致的地方就会报错，然后你可以手动运行 <code>eslint --fix</code> 来修复。</p>
+<p>不过 Prettier 的格式化很可能和你使用的 ESLint 配置冲突，比如你的 ESLint 设定的不使用分号，而 Prettier 默认使用分号，这时候你需要配置 Prettier 让它不使用分号。反之如果你想使用 Prettier 的规则而不是 ESLint 的，为防止 ESLint 报错，你需要使用 <code>eslint-config-prettier</code> 来关闭所有可能引起冲突的规则。</p>
+<p>总结一下我的配置如下 <code>package.json</code>:</p>
+<pre><code class="language-json">{
+  &quot;scripts&quot;: {
+    &quot;lint&quot;: &quot;eslint *.js&quot;
+  },
+  &quot;eslintConfig&quot;: {
+    &quot;extends&quot;: [
+      &quot;prettier&quot;
+    ],
+    &quot;plugins&quot;: [
+      &quot;prettier&quot;
+    ],
+    &quot;rules&quot;: {
+      &quot;prettier/prettier&quot;: &quot;error&quot;
+    }
+  },
+  &quot;prettier&quot;: {
+    &quot;singleQuote&quot;: true,
+    &quot;semi&quot;: false
+  }
+}
+</code></pre>
+<p>你可以使用大多数编辑器里 ESLint 插件提供的 <code>autoFixOnSave</code> 选项来在保存时自动格式化。</p>
+<h2 id="shi-yong-prettiereslintcli">使用 prettier-eslint-cli</h2>
+<p><strong>为什么使用它: 希望格式化结果完全符合 ESLint 的要求。</strong></p>
+<p>使用 ESLint 与 <code>eslint-plugin-prettier</code> 的结果是最终得到的代码是充分尊重 Prettier 的结果，而 <code>prettier-eslint-cli</code> 则是先执行 Prettier 然后再自动使用 <code>eslint --fix</code> 将与 ESLint 规则冲突的代码修正成 ESLint 想要的结果。这样其实引入 Prettier 不会影响你原有的设置。</p>
+<p>总结一下我的配置如下 <code>package.json</code>:</p>
+<pre><code class="language-json">{
+  &quot;scripts&quot;: {
+    // ESLint 只负责检查代码质量
+    &quot;lint&quot;: &quot;eslint *.js&quot;,
+    // 用 Prettier 格式化代码并自动 `eslint --fix `以便下次执行 `npm run lint` 时不会报错
+    &quot;format&quot;: &quot;prettier-eslint --write *.js&quot;
+  },
+  &quot;eslintConfig&quot;: {
+    &quot;extends&quot;: &quot;some-config&quot;
+  },
+  &quot;prettier&quot;: {
+    &quot;singleQuote&quot;: true,
+    &quot;semi&quot;: false
+  }
+}
+</code></pre>
+<p>除了命令行的 <code>npm run format</code>，同时你也可以使用编辑器里的 Prettier 插件，并启用 <code>eslintIntegration</code> 来在编辑器里自动格式化代码。</p>
+</div><div id="disqus_thread" class="disqus"></div><script>window.isPost = true;
+var disqus_config = function () {
+  this.page.url = 'https://egoist.moe/2017/12/11/write-better-code-with-eslint-and-prettier/'; // Replace PAGE_URL with your page's canonical URL variable
+  this.page.identifier = '2017/12/11/write-better-code-with-eslint-and-prettier/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};</script><noscript>Please enable JavaScript to view the<a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><div class="post-report-bug">文章勘误可以直接到 <a target="_blank" href="https://github.com/egoist/blog/blob/master/source/_posts/write-better-code-with-eslint-and-prettier.md">源代码地址</a> 修改或者 <a target="_blank" href="https://github.com/egoist/blog/issues/new">提交 ISSUE</a>，感谢阅读！</div></article></section><footer class="footer"><div class="centered"><span class="hide-on-mobile"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh">CC BY-NC-ND 4.0</a></span><span>&copy;</span><span><a href="https://github.com/egoist">E.Z.</a></span><span class="hide-on-mobile coding-support">Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages.</a></span><span class="hide-on-mobile"><a href="https://github.com/egoist/blog">Read the source code.</a></span></div></footer><div style="display:none"></div><script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-54857209-6', 'auto');
+ga('send', 'pageview');</script><script async src="https://www.google-analytics.com/analytics.js"></script><script src="/js/highlight.min.js?v=4.7.2"></script><script src="/js/zoom.js?v=4.7.2"></script><script>window.hexoLayout = "post"</script><script src="/js/app.js?v=4.7.2"></script></body></html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><title>Git 备忘录</title><link rel="alternate" type="application/rss+xml" title="庶民样本" href="/atom.xml"><link href="/css/main.css?v=4.7.2" rel="stylesheet"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@1.205.0/distr/fira_code.min.css"><link rel="stylesheet" href="/css/highlight.css?v=4.7.2"><link rel="stylesheet" href="/css/zoom.css?v=4.7.2"><meta name="twitter:card" content="summary"><meta name="twitter:site" content="@rem_rin_rin"><meta name="twitter:title" content="Git 备忘录"><meta name="description" content="Git 的一些常用操作备忘。
+起步
+安装好 Git 之后，配置你的资料:
+# 配置用户名
+git config --global user.name &amp;quot;Your Real Name&amp;quot"><meta name="twitter:description" content="Git 的一些常用操作备忘。
+起步
+安装好 Git 之后，配置你的资料:
+# 配置用户名
+git config --global user.name &amp;quot;Your Real Name&amp;quot"></head><body><header class="header"><h1 class="site-name"><a href="/">e.z.</a></h1><ul class="nav"><li><a href="/about.html">about</a></li><li><a href="/girls.html">girls</a></li><li><a href="/donate.html">donate</a></li></ul></header><section class="centered post-page"><article class="post"><h2 class="post-title">Git 备忘录</h2><div class="post-content markdown-body"><p>Git 的一些常用操作备忘。</p>
+<h2 id="qi-bu"><span>起步</span></h2>
+<p>安装好 Git 之后，配置你的资料:</p>
+<pre><code class="language-bash"># 配置用户名
+git config --global user.name &quot;Your Real Name&quot;
+# 配置邮箱地址
+git config --global user.email you@email.address
+</code></pre>
+<p>之后生成 SSH 密钥:</p>
+<pre><code class="language-bash">ssh-keygen -C 'your@email.address' -t rsa
+</code></pre>
+<p><strong>初始化一个项目</strong></p>
+<pre><code class="language-bash"># 初始化 git 项目
+git init
+# 添加一个叫 origin 的源
+# 使用 ssh 地址
+git remote add origin git@github.com:username/reponame.git
+# 使用 username/password 登录 https 地址
+git remote add origin https://username@password:github.com/username/reponame.git
+</code></pre>
+<p><strong>推送到服务器</strong></p>
+<pre><code class="language-bash"># 记录所有新增和删除的文件
+git add -A
+# 更新理由
+git commit -m &quot;message&quot;
+# 推送到服务器端
+git push origin master
+</code></pre>
+<p><strong>更新到本地</strong></p>
+<pre><code class="language-bash"># 源 + 分支名
+git pull origin master
+</code></pre>
+<p><strong>克隆项目</strong></p>
+<p>下载代码时有用:</p>
+<pre><code class="language-bash"># 克隆到以这个项目名命名的文件夹
+git clone https://github.com/username/reponame.git
+# 克隆到你自定义的文件夹
+git clone https://github.com/username/reponame.git name
+</code></pre>
+<p><em>Keep Updating…</em></p>
+</div><div id="disqus_thread" class="disqus"></div><script>window.isPost = true;
+var disqus_config = function () {
+  this.page.url = 'https://egoist.moe/2015/10/07/git-memo/'; // Replace PAGE_URL with your page's canonical URL variable
+  this.page.identifier = '2015/10/07/git-memo/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};</script><noscript>Please enable JavaScript to view the<a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><div class="post-report-bug">文章勘误可以直接到 <a target="_blank" href="https://github.com/egoist/blog/blob/master/source/_posts/git-memo.md">源代码地址</a> 修改或者 <a target="_blank" href="https://github.com/egoist/blog/issues/new">提交 ISSUE</a>，感谢阅读！</div></article></section><footer class="footer"><div class="centered"><span class="hide-on-mobile"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh">CC BY-NC-ND 4.0</a></span><span>&copy;</span><span><a href="https://github.com/egoist">E.Z.</a></span><span class="hide-on-mobile coding-support">Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages.</a></span><span class="hide-on-mobile"><a href="https://github.com/egoist/blog">Read the source code.</a></span></div></footer><div style="display:none"></div><script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-54857209-6', 'auto');
+ga('send', 'pageview');</script><script async src="https://www.google-analytics.com/analytics.js"></script><script src="/js/highlight.min.js?v=4.7.2"></script><script src="/js/zoom.js?v=4.7.2"></script><script>window.hexoLayout = "post"</script><script src="/js/app.js?v=4.7.2"></script></body></html>
