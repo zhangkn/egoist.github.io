@@ -12,6 +12,7 @@ function ready() {
     disqus()
     makeZoom()
     footnote()
+    codepan()
   }
   if (window.hexoLayout === 'page') {
     makeZoom()
@@ -52,5 +53,17 @@ function ready() {
     if (/^#fn\d+$/.test(hash)) {
       $(hash).classList.add('is-focus')
     }
+  }
+
+  function codepan() {
+    Array.prototype.forEach.call($$('a[href^="https://codepan.net/gist/"]'), function (el) {
+      var url = el.href
+      var iframe = document.createElement('iframe')
+      iframe.src = url
+      iframe.className = 'codepan-iframe'
+      console.log(el.parentNode)
+      el.parentNode.appendChild(iframe)
+      el.parentNode.removeChild(el)
+    })
   }
 }
