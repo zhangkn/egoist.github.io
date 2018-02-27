@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://egoist.moe/"/>
-  <updated>2018-01-09T09:59:37.000Z</updated>
+  <updated>2018-02-27T07:21:06.024Z</updated>
   <id>https://egoist.moe/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>我的 rollup-plugin-postcss</title>
+    <link href="https://egoist.moe/2018/02/27/my-rollup-plugin-postcss/"/>
+    <id>https://egoist.moe/2018/02/27/my-rollup-plugin-postcss/</id>
+    <published>2018-02-27T06:28:14.000Z</published>
+    <updated>2018-02-27T07:21:06.024Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://github.com/egoist/rollup-plugin-postcss" target="_blank" rel="external">rollup-plugin-postcss</a> 是我两年前开源的一个项目，用于为 <a href="https://rollupjs.org/guide/en" target="_blank" rel="external">Rollup</a> 提供 <a href="https://github.com/postcss/postcss" target="_blank" rel="external">PostCSS</a> 支持。</p><p>这基本上是我刚开始工作的时候写的代码，所以见证了我一段心路历程。</p><h2 id="2015-nian12-yue8-ri">2015 年 12 月 8 日</h2><p>我<a href="https://github.com/egoist/rollup-plugin-postcss/commit/ed445b067e0772aa39403db23bfb2bc4b6129aef#diff-04c6e90faac2675aa89e2176d2eec7d8" target="_blank" rel="external">首次提交了代码</a>，那个时候我的邮箱还是 <code>aprilorange.net@icloud.com</code><sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>，不过早已由于忘记密码且无法申诉而永久无法登录了。</p><p>当时的代码极为简单，仅仅是调用 <code>postcss</code> 转换 CSS 代码并提供 <code>plugins</code> 参数:</p><pre><code class="language-js">import postcss from 'postcss';import styleInject from 'style-inject'; export default function (options = {}) {  return {    intro () {      return styleInject.toString();    },    transform (code, id) {      if (id.slice( -4 ) !== '.css') {        return null;      }      code = postcss(options.plugins || []).process(code).css;      code = `export default styleInject(${JSON.stringify(code)});`      return {        code,        map: { mappings: '' }      };    }  };};</code></pre><p>之后就在当天，我向 PostCSS 项目提交 PR 请求在 README 上列出我的这个项目，而这个 PR 的序号也很溜: <a href="https://github.com/postcss/postcss/pull/666" target="_blank" rel="external">https://github.com/postcss/postcss/pull/666</a></p><p>发这个 Issue 的时候我刚下班，骑着自行车回家的途中发现收到了回复，我就停下车来，靠着自行车在成都万象城旁边傻站着摸着手机回复。</p><p>PostCSS 的维护者告诉我应该使用异步的 API，我也就照做了，然后就发生了:</p><p><img src="https://i.loli.net/2018/02/27/5a94fe69825e3.png" alt="lol"></p><p>其实我当时还不太懂 Promise，经他指出之后研究了一下才发现一个函数已经返回了 Promise 就不用再把它 wrap 进一个 Promise 了:</p><p><img src="https://i.loli.net/2018/02/27/5a94fec490e73.png" alt="promise"></p><p>在这之后我也看到过其它人像我以前那样写，就感觉很好，因为我再也不会那么傻了。</p><h2 id="2015-nian12-yue23-ri">2015 年 12 月 23 日</h2><p>开源两周后，这个项目迎来了<a href="https://github.com/egoist/rollup-plugin-postcss/issues/1" target="_blank" rel="external">第一个 Issue</a>，我当时是很激动的:</p><p><img src="https://i.loli.net/2018/02/27/5a9500dcc43a7.png" alt="issue 1"></p><p>这个人可能在今天已经为读者们所熟知，也就是 <a href="https://github.com/developit/preact" target="_blank" rel="external">Preact</a> 的作者，我记得在当时 Preact 还只有几百个 stars?</p><h2 id="2016-nian5-yue29-ri">2016 年 5 月 29 日</h2><p>半年没更新这个项目了，难道是没人用吗，我也不知道因为我自己也不用。不过当时我似乎挺喜欢用 <a href="https://github.com/avajs/ava" target="_blank" rel="external">AVA</a> 写测试，因为 CLI 效果很炫而且默认就支持用 ES2015 写测试。</p><p>于是我就 commit 了一发<a href="https://github.com/egoist/rollup-plugin-postcss/commit/9698d66ca1f04a2308c94fe74d94d184f2891b96" target="_blank" rel="external">将 Mocha 替换成 AVA</a> 了。</p><h2 id="2016-nian9-yue2-ri">2016 年 9 月 2 日</h2><p>这天有人来了个 <a href="https://github.com/egoist/rollup-plugin-postcss/pull/5" target="_blank" rel="external">PR</a>，尽管不知道 fix 了什么我还是合了吧?</p><p>之后又来了一些 contributors，慢慢地我就懒得管了，基本全都是他们在 fix bugs 或者添加新 features，逐渐地我自己也看不懂里面的代码了 😅</p><h2 id="2018-nian1-yue10-ri">2018 年 1 月 10 日</h2><p>过了一年多，我突然找回了责任心，想起了那句责任越大能力越大，打算重写一下这个项目。在此之前我折腾了很久的 webpack，于是就得到了一些重写的灵感，想让这个插件以 <code>loader</code> 的方式支持任何 CSS 预处理器，而且刚好 <a href="https://github.com/parcel-bundler/parcel" target="_blank" rel="external">Parcel</a> 突然流行了起来，我也就顺便让它无需配置便能编译 CSS/Sass/Less/Stylus。和每次重构之后的心情一样，我再次觉得这次的代码写得很完美了。</p><p><img src="https://i.loli.net/2018/02/27/5a9505707f0ea.png" alt="current"></p><h2 id="2018-nian2-yue27-ri">2018 年 2 月 27 日</h2><p>今天，也就是我写这篇文章的日子，rollup-plugin-postcss 已被 <a href="https://github.com/egoist/rollup-plugin-postcss/network/dependents" target="_blank" rel="external">900</a> 多个项目使用，其中包括像 <a href="https://github.com/developit/microbundle" target="_blank" rel="external">microbundle</a> 和 <a href="https://github.com/egoist/bili" target="_blank" rel="external">bili</a> 这样基于 Rollup 的打包工具。</p><p>照目前的趋势来看，目前的代码还没有崩坏的迹象，在一段时间内可读性还能维持在较高范围。</p><hr class="footnotes-sep"><section class="footnotes"><ol class="footnotes-list"><li id="fn1" class="footnote-item"><p>我的笔名叫四月橘林，所以当时英文名就叫 April Orange XD <a href="#fnref1" class="footnote-backref">↩︎</a></p></li></ol></section>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;a href=&quot;https://github.com/egoist/rollup-plugin-postcss&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;rollup-plugin-postcss&lt;/a&gt; 是我两年前开源的一个项目，用于为 &lt;a hr
+      
+    
+    </summary>
+    
+    
+      <category term="javascript" scheme="https://egoist.moe/tags/javascript/"/>
+    
+      <category term="story" scheme="https://egoist.moe/tags/story/"/>
+    
+  </entry>
   
   <entry>
     <title>用 ESLint 和 Prettier 写出高质量代码</title>
@@ -493,34 +518,6 @@ node ./bar.js
       <category term="rezero" scheme="https://egoist.moe/tags/rezero/"/>
     
       <category term="rem" scheme="https://egoist.moe/tags/rem/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>日本人的英语差劲透了吗</title>
-    <link href="https://egoist.moe/2016/07/04/japanese-suck-at-english/"/>
-    <id>https://egoist.moe/2016/07/04/japanese-suck-at-english/</id>
-    <published>2016-07-04T06:28:49.000Z</published>
-    <updated>2018-01-09T09:59:37.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>这是个很片面的看法，不过的确有些日本人确实是这样。就像很多中国人连普通话都说不好。</p><p>但是这种看法变成一种现象就很奇怪了，就像你说上海的女人都很强势一样。</p><p>特别是有些人耳朵聋了，一听到从日本人嘴里冒出来的英文都打上「日式英语」的标签。</p><p>其实即便有些日本人平时生活里说着日式英语，但是一到正式场合的时候都会尽量用标准的英语，比如你可能知道的仓木麻衣，她有首英文歌 <a href="http://music.163.com/#/m/song?id=589136" target="_blank" rel="external">Secret Of My Heart</a> 里的英语应该能算作很标准了吧，可她接受采访的时候基本上都是用罗马音来读英语，比如 friendly 读成 「furenteri」。你可以联想成中文里的音译词，比如「麦当劳」「沙发」，如果叫你在说中文的时候用标准的英语说这些词你是不是也会感到不快呢？试试吧:</p><ul><li>今天我去 IKEA 买了个 Sofa, 然后去 Mc Donald 吃了午餐。</li><li>今天我去宜家买了个沙发，然后去麦当劳吃了午餐。</li></ul><p>很多时候人们在线用文字交流，所以相关单词写成英文原文也可以，但是看到的时候常常也会联想到这个词的中文音译。</p><p>说实话，这些日式英语不过也就是日语里的音译词，没什么可笑的，因为你也天天在接触，只不过是用中文，只不过是用拼音而不是罗马音。拼音的发音相似度和英文不高，所以没有很多人纠结，而很多罗马音读起来至少有半个音节和英语一样，于是有人便成为了这方面的评论家了。同时因为大多数的中文音译词读起来都和原词差距比较大，自然就没有太多中国人在说英语的时候插着说这些音译词。</p><p>不信的话试着对老外说「Thank you for today! 拜拜」。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;这是个很片面的看法，不过的确有些日本人确实是这样。就像很多中国人连普通话都说不好。&lt;/p&gt;
-&lt;p&gt;但是这种看法变成一种现象就很奇怪了，就像你说上海的女人都很强势一样。&lt;/p&gt;
-&lt;p&gt;特别是有些人耳朵聋了，一听到从日本人嘴里冒出来的英文都打上「日式英语」的标签。&lt;/p&gt;
-&lt;p
-      
-    
-    </summary>
-    
-    
-      <category term="japanese" scheme="https://egoist.moe/tags/japanese/"/>
-    
-      <category term="prejudice" scheme="https://egoist.moe/tags/prejudice/"/>
     
   </entry>
   
